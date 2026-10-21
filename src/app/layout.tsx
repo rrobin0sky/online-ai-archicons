@@ -49,6 +49,12 @@ export default function RootLayout({
       </head>
       <body className="antialiased bg-slate-50 dark:bg-slate-950 min-h-screen flex flex-col font-sans transition-colors">
         {children}
+        <script
+          src="https://bin0sky.tech/shared/nav-pill.js"
+          data-title="ArchIcons"
+          data-category="apps"
+          defer
+        />
       </body>
     </html>
   );

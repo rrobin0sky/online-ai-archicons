@@ -156,7 +156,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={onToggleLang}
-            className="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs font-bold text-slate-800 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 active:scale-95 transition-all"
+            className="b0-hide-in-frame flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs font-bold text-slate-800 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 active:scale-95 transition-all"
             title={lang === 'zh' ? '切换语言 (Switch to English)' : 'Switch Language (切换中文)'}
           >
             <Globe className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
@@ -167,7 +167,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={onToggleDarkMode}
-            className="p-1.5 sm:p-2 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 active:scale-95 transition-all"
+            className="b0-hide-in-frame p-1.5 sm:p-2 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 active:scale-95 transition-all"
             title={darkMode ? (lang === 'zh' ? '切换为亮色模式' : 'Light Mode') : (lang === 'zh' ? '切换为暗色模式' : 'Dark Mode')}
           >
             {darkMode ? (

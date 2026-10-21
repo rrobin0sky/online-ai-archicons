@@ -12,25 +12,68 @@ export default function TermsPage() {
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('archicons_theme_mode');
+      const b0Theme = localStorage.getItem('b0_theme') || (document.cookie.match(/(^|;\s*)b0_theme=([^;]*)/)?.[2]);
+      const savedTheme = b0Theme || localStorage.getItem('archicons_theme_mode');
       const isDark = savedTheme
         ? savedTheme === 'dark'
         : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       setDarkMode(isDark);
       if (isDark) {
         document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
       } else {
         document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
       }
 
+      // Load saved language with BinOS root cookie fallback
       try {
-        const savedLang = localStorage.getItem('archicons_lang') as 'zh' | 'en' | null;
-        if (savedLang === 'zh' || savedLang === 'en') {
-          setLang(savedLang);
+        const b0Lang = localStorage.getItem('b0_lang') || (document.cookie.match(/(^|;\s*)b0_lang=([^;]*)/)?.[2]);
+        const rawLang = b0Lang || localStorage.getItem('archicons_lang');
+        if (rawLang) {
+          const l = rawLang.toLowerCase();
+          setLang(l.startsWith('zh') ? 'zh' : 'en');
         }
       } catch (err) {
         console.error('Failed to load lang from localStorage', err);
       }
+
+      // Universal Theme & Lang Event Listeners
+      const handleThemeEvent = (e: any) => {
+        const dark = e.detail?.isDark ?? (e.data?.theme === 'dark');
+        if (typeof dark === 'boolean') {
+          setDarkMode(dark);
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.classList.toggle('light', !dark);
+        }
+      };
+
+      const handleLangEvent = (e: any) => {
+        const raw = e.detail?.lang || e.data?.lang;
+        if (raw) {
+          const l = raw.toLowerCase();
+          setLang(l.startsWith('zh') ? 'zh' : 'en');
+        }
+      };
+
+      const handlePostMessage = (e: MessageEvent) => {
+        if (!e.data) return;
+        if (e.data.type === 'B0_THEME_CHANGE') {
+          handleThemeEvent(e);
+        } else if (e.data.type === 'B0_LANG_CHANGE') {
+          handleLangEvent(e);
+        }
+      };
+
+      window.addEventListener('b0-theme-change', handleThemeEvent as EventListener);
+      window.addEventListener('b0-lang-change', handleLangEvent as EventListener);
+      window.addEventListener('message', handlePostMessage);
+
+      return () => {
+        window.removeEventListener('b0-theme-change', handleThemeEvent as EventListener);
+        window.removeEventListener('b0-lang-change', handleLangEvent as EventListener);
+        window.removeEventListener('message', handlePostMessage);
+      };
     }
   }, []);
 
@@ -39,18 +82,19 @@ export default function TermsPage() {
       const next = !prev;
       if (next) {
         document.documentElement.classList.add('dark');
-        try {
-          localStorage.setItem('archicons_theme_mode', 'dark');
-        } catch (e) {
-          console.error(e);
-        }
+        document.documentElement.classList.remove('light');
       } else {
         document.documentElement.classList.remove('dark');
-        try {
-          localStorage.setItem('archicons_theme_mode', 'light');
-        } catch (e) {
-          console.error(e);
-        }
+        document.documentElement.classList.add('light');
+      }
+      try {
+        localStorage.setItem('archicons_theme_mode', next ? 'dark' : 'light');
+        localStorage.setItem('b0_theme', next ? 'dark' : 'light');
+        const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        const domainStr = isLocal ? '' : '; domain=.bin0sky.tech';
+        document.cookie = `b0_theme=${next ? 'dark' : 'light'}; path=/${domainStr}; max-age=31536000; SameSite=Lax`;
+      } catch (e) {
+        console.error(e);
       }
       return next;
     });
@@ -61,6 +105,10 @@ export default function TermsPage() {
       const next = prev === 'zh' ? 'en' : 'zh';
       try {
         localStorage.setItem('archicons_lang', next);
+        localStorage.setItem('b0_lang', next === 'zh' ? 'zh-CN' : 'en');
+        const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        const domainStr = isLocal ? '' : '; domain=.bin0sky.tech';
+        document.cookie = `b0_lang=${next === 'zh' ? 'zh-CN' : 'en'}; path=/${domainStr}; max-age=31536000; SameSite=Lax`;
       } catch (e) {
         console.error(e);
       }
