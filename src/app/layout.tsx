@@ -43,7 +43,22 @@ export default function RootLayout({
         {/* Anti-Flicker Theme Initialization Script */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var saved=localStorage.getItem('archicons_theme_mode');var isDark=saved?saved==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(isDark){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')}}catch(e){}})()`,
+            __html: `(function(){try{
+              var params = new URLSearchParams(window.location.search);
+              var urlTheme = params.get('b0_theme');
+              var saved = urlTheme || localStorage.getItem('b0_theme') || localStorage.getItem('archicons_theme_mode');
+              var isDark = saved ? (saved === 'dark') : window.matchMedia('(prefers-color-scheme: dark)').matches;
+              if (isDark) {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+              } else {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+              }
+              if (params.get('b0_embedded') === '1' || window.top !== window.self) {
+                document.documentElement.classList.add('b0-embedded');
+              }
+            }catch(e){}})()`,
           }}
         />
       </head>

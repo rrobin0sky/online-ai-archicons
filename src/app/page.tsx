@@ -33,7 +33,11 @@ export default function HomePage() {
   // Load theme, lang & favorites on mount with BinOS universal synchronization
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const b0Theme = localStorage.getItem('b0_theme') || (document.cookie.match(/(^|;\s*)b0_theme=([^;]*)/)?.[2]);
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlTheme = urlParams.get('b0_theme');
+      const urlLang = urlParams.get('b0_lang');
+
+      const b0Theme = urlTheme || localStorage.getItem('b0_theme') || (document.cookie.match(/(^|;\s*)b0_theme=([^;]*)/)?.[2]);
       const savedTheme = b0Theme || localStorage.getItem('archicons_theme_mode');
       const isDark = savedTheme
         ? savedTheme === 'dark'
@@ -49,7 +53,7 @@ export default function HomePage() {
 
       // Load saved language with BinOS root cookie fallback
       try {
-        const b0Lang = localStorage.getItem('b0_lang') || (document.cookie.match(/(^|;\s*)b0_lang=([^;]*)/)?.[2]);
+        const b0Lang = urlLang || localStorage.getItem('b0_lang') || (document.cookie.match(/(^|;\s*)b0_lang=([^;]*)/)?.[2]);
         const rawLang = b0Lang || localStorage.getItem('archicons_lang');
         if (rawLang) {
           const l = rawLang.toLowerCase();
