@@ -40,12 +40,13 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="#2563eb" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        {/* Anti-Flicker Theme Initialization Script */}
+        {/* Anti-Flicker Theme & Lang Initialization Script */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{
               var params = new URLSearchParams(window.location.search);
               var urlTheme = params.get('b0_theme');
+              var urlLang = params.get('b0_lang');
               var saved = urlTheme || localStorage.getItem('b0_theme') || localStorage.getItem('archicons_theme_mode');
               var isDark = saved ? (saved === 'dark') : window.matchMedia('(prefers-color-scheme: dark)').matches;
               if (isDark) {
@@ -54,6 +55,11 @@ export default function RootLayout({
               } else {
                 document.documentElement.classList.remove('dark');
                 document.documentElement.classList.add('light');
+              }
+              var savedLang = urlLang || localStorage.getItem('b0_lang') || localStorage.getItem('archicons_lang');
+              if (savedLang) {
+                var isZh = savedLang.toLowerCase().startsWith('zh');
+                document.documentElement.setAttribute('lang', isZh ? 'zh' : 'en');
               }
               if (params.get('b0_embedded') === '1' || window.top !== window.self) {
                 document.documentElement.classList.add('b0-embedded');

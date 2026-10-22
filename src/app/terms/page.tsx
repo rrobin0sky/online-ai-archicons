@@ -51,8 +51,14 @@ export default function TermsPage() {
       const handleLangEvent = (e: any) => {
         const raw = e.detail?.lang || e.data?.lang;
         if (raw) {
-          const l = raw.toLowerCase();
-          setLang(l.startsWith('zh') ? 'zh' : 'en');
+          const isZh = raw.toLowerCase().startsWith('zh');
+          const target = isZh ? 'zh' : 'en';
+          setLang(target);
+          try {
+            localStorage.setItem('archicons_lang', target);
+            localStorage.setItem('b0_lang', isZh ? 'zh-CN' : 'en');
+          } catch(err) {}
+          document.documentElement.setAttribute('lang', target);
         }
       };
 
