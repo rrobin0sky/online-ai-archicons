@@ -2,20 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+html.light,
+html:not(.dark) {
   --foreground-rgb: 15, 23, 42;
-  --background-rgb: 255, 255, 255;
+  --background-rgb: 248, 250, 252;
 }
 
-.dark {
-  --foreground-rgb: 255, 255, 255;
-  --background-rgb: 9, 9, 11;
+.dark,
+html.dark {
+  --foreground-rgb: 248, 250, 252;
+  --background-rgb: 9, 10, 15;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background-color: rgb(var(--background-rgb));
   min-height: 100vh;
+}
+
+/* Glassmorphism custom classes - Dark Mode */
+.dark .glass-panel,
+html.dark .glass-panel {
+  background: rgba(15, 18, 28, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark .glass-input,
+html.dark .glass-input {
+  background: rgba(10, 12, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.dark .glass-input:focus,
+html.dark .glass-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+/* Glassmorphism custom classes - Light Mode */
+html.light .glass-panel,
+html:not(.dark) .glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+}
+
+html.light .glass-input,
+html:not(.dark) .glass-input {
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: #0f172a;
+  transition: all 0.2s ease;
+}
+
+html.light .glass-input:focus,
+html:not(.dark) .glass-input:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
 }
 
 /* Subtle architectural grid pattern */

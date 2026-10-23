@@ -41,18 +41,18 @@ export const PalettePopover: React.FC<PalettePopoverProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border transition-all text-xs font-semibold active:scale-95 ${
+        className={`h-8 px-3 rounded-lg border text-xs font-medium inline-flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap ${
           isOpen
-            ? 'border-slate-900 dark:border-white bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
-            : 'border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800'
+            ? 'bg-slate-900/[0.10] border-slate-900/25 text-slate-950 dark:bg-white/[0.14] dark:border-white/25 dark:text-white'
+            : 'bg-slate-900/[0.04] hover:bg-slate-900/[0.08] border-slate-200/80 text-slate-700 hover:text-slate-950 dark:bg-white/[0.05] dark:hover:bg-white/[0.10] dark:border-white/10 dark:text-zinc-200 dark:hover:text-white'
         }`}
         title={lang === 'zh' ? '全局调色板' : 'Color Palette'}
       >
         <span
-          className="w-3.5 h-3.5 rounded-full border border-black/20 dark:border-white/20 shadow-xs flex-shrink-0"
+          className="w-3 h-3 rounded-full border border-black/20 dark:border-white/25 flex-shrink-0"
           style={{ backgroundColor: currentColor }}
         />
-        <span className="hidden sm:inline">{lang === 'zh' ? '配色' : 'Color'}</span>
+        <span>{lang === 'zh' ? '配色' : 'Color'}</span>
       </button>
 
       {/* Popover Dropdown Modal */}

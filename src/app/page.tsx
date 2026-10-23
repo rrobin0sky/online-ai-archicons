@@ -267,11 +267,11 @@ export default function HomePage() {
   }, [searchQuery, selectedStyle, selectedProvider, selectedCategory, showOnlyFavorites, favorites]);
 
   return (
-    <div className="flex-1 flex flex-col bg-white dark:bg-[#09090b] min-h-screen text-slate-900 dark:text-white transition-colors">
+    <div className="flex-1 flex flex-col bg-[#f8fafc] dark:bg-[#090a0f] min-h-screen text-slate-900 dark:text-zinc-100 transition-colors">
       {/* Floating Apple HUD Toast Notification */}
       <FloatingHudToast toast={hudToast} />
 
-      {/* Top Sticky Header with integrated Style Mode Pills & utility buttons */}
+      {/* Top Sticky Header with centered Search Bar & unified utility buttons */}
       <Header
         lang={lang}
         onToggleLang={toggleLang}
@@ -282,58 +282,42 @@ export default function HomePage() {
         favoritesCount={favorites.length}
         showOnlyFavorites={showOnlyFavorites}
         onToggleShowOnlyFavorites={() => setShowOnlyFavorites((prev) => !prev)}
-        selectedStyle={selectedStyle}
-        onStyleChange={setSelectedStyle}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onOpenBatchExport={() => setIsBatchModalOpen(true)}
+        onExportDrawio={handleExportDrawio}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-3 sm:pt-4 pb-16">
-        {/* Compact Single-Row Unified Toolbar */}
-        <div className="mb-3 sm:mb-4">
-          <FilterBar
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            selectedStyle={selectedStyle}
-            selectedProvider={selectedProvider}
-            onProviderChange={setSelectedProvider}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            lang={lang}
-            totalCount={ICONS.length}
-            filteredCount={filteredIcons.length}
-            onOpenBatchExport={() => setIsBatchModalOpen(true)}
-            onExportDrawio={handleExportDrawio}
-          />
-        </div>
-
-        {/* Reset filter button if filtered */}
-        {(searchQuery || selectedStyle !== 'all' || selectedProvider !== 'all' || selectedCategory !== 'all' || showOnlyFavorites) && (
-          <div className="flex items-center justify-between py-1 mb-3 text-xs text-slate-500 dark:text-zinc-400">
-            <span>
-              {showOnlyFavorites
-                ? (lang === 'zh' ? `★ 正在展示 ${filteredIcons.length} 款已收藏设备` : `★ Showing ${filteredIcons.length} Favorites`)
-                : (lang === 'zh' ? `当前筛选结果：${filteredIcons.length} 款设备` : `Filtered: ${filteredIcons.length} icons`)}
-            </span>
-            <button
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedStyle('all');
-                setSelectedProvider('all');
-                setSelectedCategory('all');
-                setShowOnlyFavorites(false);
-              }}
-              className="text-blue-600 dark:text-blue-400 font-bold hover:underline"
-            >
-              {lang === 'zh' ? '重置所有筛选' : 'Clear all filters'}
-            </button>
-          </div>
-        )}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-4 pb-16 flex flex-col gap-4">
+        {/* Horizontal Glass Filter Panel */}
+        <FilterBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedStyle={selectedStyle}
+          onStyleChange={setSelectedStyle}
+          selectedProvider={selectedProvider}
+          onProviderChange={setSelectedProvider}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          showOnlyFavorites={showOnlyFavorites}
+          onResetAll={() => {
+            setSearchQuery('');
+            setSelectedStyle('all');
+            setSelectedProvider('all');
+            setSelectedCategory('all');
+            setShowOnlyFavorites(false);
+          }}
+          lang={lang}
+          totalCount={ICONS.length}
+          filteredCount={filteredIcons.length}
+        />
 
         {/* Google AdSense / Sponsor Slot */}
         <AdSenseSlot lang={lang} />
 
         {/* Icons Grid */}
         {filteredIcons.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5">
             {filteredIcons.map((icon) => (
               <IconCard
                 key={icon.id}
